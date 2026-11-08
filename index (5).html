@@ -1,0 +1,872 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Materi interaktif Kimia SMA/MA Kelas XI: konsep laju reaksi dan teori tumbukan, dengan simulasi dan latihan soal.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M24 6h16v6h-2v14l16 28a8 8 0 0 1-7 12H17a8 8 0 0 1-7-12l16-28V12h-2z' fill='%23ffb9d0' stroke='%232c2a3e' stroke-width='3'/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Laju Reaksi dan Teori Tumbukan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Lexend:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: satu kolom seperti buku catatan lab yang lucu; tiap bagian punya warna pastel sendiri, simulasi di "meja percobaan" putih */
+:root{
+  --bg:#f3effb; --surface:#fffdfb; --ink:#2c2a3e; --muted:#6a6782; --line:#e2daf3; --grid:#ece6f7;
+  --well:#f6f3fc;
+  --br:#b04a20; --br-soft:#ffeadf; --brliquid:#b8541f; --water:#e4f2f8;
+  --teal:#23827d; --teal-soft:#dff4ef; --good:#2a7d4d; --good-soft:#e2f5e9; --bad:#b33a33; --bad-soft:#fde6e4;
+  --site:#f4c53a; --glass:#a7a3c2;
+  --sec1:#fff3ec; --sec2:#ecf9f3; --sec3:#fffae3; --sec4:#f4effe;
+  --blob1:#ffe1ec; --blob2:#dff1ff; --blob3:#e2f7e9;
+  --o-pink:#ffb9d0; --o-peach:#ffcba9; --o-mint:#a7e5cb; --o-lemon:#ffe28c; --o-lilac:#cbb8f6; --o-sky:#acd8ff; --blush:#ff9dba; --o-line:#2c2a3e;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Lexend", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1a1826; --surface:#221f31; --ink:#ece8f6; --muted:#a29dbb; --line:#363149; --grid:#2c2840;
+  --well:#1d1a2b;
+  --br:#ec9562; --br-soft:#3b2620; --brliquid:#c65d29; --water:#1f3340;
+  --teal:#5cc0b9; --teal-soft:#1b3431; --good:#66c98f; --good-soft:#1a3326; --bad:#f2847a; --bad-soft:#3d2023;
+  --site:#f6cf52; --glass:#6b6688;
+  --sec1:#2a2124; --sec2:#1c2a27; --sec3:#2a2720; --sec4:#252036;
+  --blob1:#2e2030; --blob2:#1c2638; --blob3:#1d2c25; --o-line:#1a1826;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1a1826; --surface:#221f31; --ink:#ece8f6; --muted:#a29dbb; --line:#363149; --grid:#2c2840;
+  --well:#1d1a2b;
+  --br:#ec9562; --br-soft:#3b2620; --brliquid:#c65d29; --water:#1f3340;
+  --teal:#5cc0b9; --teal-soft:#1b3431; --good:#66c98f; --good-soft:#1a3326; --bad:#f2847a; --bad-soft:#3d2023;
+  --site:#f6cf52; --glass:#6b6688;
+  --sec1:#2a2124; --sec2:#1c2a27; --sec3:#2a2720; --sec4:#252036;
+  --blob1:#2e2030; --blob2:#1c2638; --blob3:#1d2c25; --o-line:#1a1826;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:
+  radial-gradient(circle at 8% 4%, var(--blob1) 0, transparent 28%),
+  radial-gradient(circle at 95% 18%, var(--blob2) 0, transparent 30%),
+  radial-gradient(circle at 10% 70%, var(--blob3) 0, transparent 26%),
+  radial-gradient(circle at 92% 88%, var(--blob1) 0, transparent 24%),
+  var(--bg);
+  color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.65;font-weight:400}
+
+/* ornamen */
+.orn{position:absolute;pointer-events:none;overflow:visible}
+.float{animation:bob 4s ease-in-out infinite}
+.float.d2{animation-delay:-1.3s}.float.d3{animation-delay:-2.6s}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-6px) rotate(3deg)}}
+.twinkle{animation:tw 2.6s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.82)}}
+@media (prefers-reduced-motion: reduce){.float,.twinkle{animation:none}}
+.squiggle{display:flex;justify-content:center;align-items:center;gap:10px;height:22px}
+.squiggle svg{display:block}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 64px;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,6vw,3rem);font-weight:800;letter-spacing:-.01em}
+h2{font-size:1.6rem;font-weight:800}
+h3{font-size:1.12rem;font-weight:600}
+p{margin:0;max-width:68ch}
+.eyebrow{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+sub,sup{line-height:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+header.hero{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:14px 20px;align-items:center;padding-block:8px 4px}
+.hero-text{display:flex;flex-direction:column;gap:14px;min-width:0}
+.mascot{width:150px;height:auto}
+@media (max-width:620px){header.hero{grid-template-columns:minmax(0,1fr)}.mascot{width:110px;justify-self:end;margin-top:-8px}}
+.hero .lead{font-size:1.08rem;color:var(--muted)}
+@media (max-width:620px){.hero-spark{display:none}}
+.goals{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.goals span{font-size:.85rem;border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px}
+.goals span:nth-child(1){border-color:var(--o-peach)}.goals span:nth-child(2){border-color:var(--o-mint)}.goals span:nth-child(3){border-color:var(--o-lilac)}
+
+section.part{position:relative;background:var(--sec,var(--surface));border:1.5px solid var(--line);border-radius:22px;padding:26px max(16px,3vw);display:flex;flex-direction:column;gap:18px}
+section.s1{--sec:var(--sec1);--dot:var(--o-peach)}
+section.s2{--sec:var(--sec2);--dot:var(--o-mint)}
+section.s3{--sec:var(--sec3);--dot:var(--o-lemon)}
+section.s4{--sec:var(--sec4);--dot:var(--o-lilac)}
+.part-head{display:flex;align-items:center;gap:12px;padding-right:64px}
+.part-head .num{flex:none;display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:var(--dot);color:#2c2a3e;font-family:var(--f-display);font-weight:800;font-size:1.3rem;border:2px solid var(--o-line)}
+.part .orn-tr{top:-26px;right:14px;width:64px;height:64px}
+
+.formula{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px 40px;padding:16px;border-radius:14px;background:var(--surface);border:1.5px dashed var(--line);font-family:var(--f-mono);font-size:1.05rem}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px;line-height:1.3;font-size:.95em}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 4px 1px}
+.frac>span:last-child{padding:1px 4px 0}
+.fx{display:inline-flex;align-items:center;gap:6px}
+
+.note{position:relative;border:2px solid var(--o-mint);background:var(--teal-soft);padding:12px 16px 12px 48px;border-radius:16px;font-size:.95rem}
+.note::before{content:"";position:absolute;left:14px;top:14px;width:22px;height:22px;border-radius:50%;background:var(--o-mint);box-shadow:inset 0 0 0 2px var(--o-line)}
+.note.key::before{background:var(--o-lemon)}
+.note.key{border-color:var(--o-peach);background:var(--br-soft)}
+.note b{font-weight:600}
+
+/* lab bench */
+.bench{border:2px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:14px;background:var(--surface);box-shadow:0 4px 0 var(--line)}
+.bench-title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tag{font-family:var(--f-mono);font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#2c2a3e;background:var(--dot,var(--o-lilac));padding:3px 10px;border-radius:999px}
+.equation{font-family:var(--f-mono);font-size:.95rem;overflow-x:auto;padding:10px 12px;background:var(--well);border-radius:12px}
+.equation table{border-collapse:collapse;margin:0 auto}
+.equation td{padding:0 6px;text-align:center;white-space:nowrap}
+.equation .lbl td{font-family:var(--f-body);font-size:.72rem;color:var(--muted);padding-top:2px}
+.br-txt{color:var(--br);font-weight:600}
+
+.br-grid{display:grid;grid-template-columns:170px minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:620px){.br-grid{grid-template-columns:1fr}.beaker-box{max-width:150px;margin:0 auto}}
+canvas{display:block;width:100%;max-width:100%}
+#beaker{aspect-ratio:3/4}
+#brGraph{aspect-ratio:16/10}
+.readouts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ro{background:var(--well);border-radius:12px;padding:8px 10px;min-width:0}
+.ro .k{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.ro .v{font-family:var(--f-mono);font-weight:600;font-size:1rem;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+@media (max-width:460px){.readouts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.controls{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.btn{font:inherit;font-size:.9rem;font-weight:500;border:2px solid var(--ink);background:var(--ink);color:var(--surface);border-radius:999px;padding:7px 16px;cursor:pointer;box-shadow:0 3px 0 var(--o-lilac);transition:transform .12s}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--o-lilac)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:hover{filter:brightness(1.1)}
+.btn:focus-visible,input:focus-visible,.opt:focus-visible,summary:focus-visible,.seg button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.range{display:flex;align-items:center;gap:10px;flex:1 1 220px;min-width:0}
+.range label{font-size:.85rem;color:var(--muted);white-space:nowrap}
+input[type=range]{flex:1;min-width:0;accent-color:var(--br)}
+.chk{display:inline-flex;align-items:center;gap:6px;font-size:.88rem;cursor:pointer}
+.chk input{accent-color:var(--br);width:16px;height:16px}
+
+.calc{border-top:1px dashed var(--line);padding-top:14px;display:flex;flex-direction:column;gap:10px}
+.calc-out{font-family:var(--f-mono);font-size:.92rem;background:var(--well);border-radius:12px;padding:12px 14px;overflow-x:auto;display:flex;flex-direction:column;gap:8px}
+.calc-out>div{white-space:nowrap}
+.calc-out .res{color:var(--br);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:.82rem;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+.chip:hover{border-color:var(--br)}
+
+details.ask{border:1.5px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 14px}
+details.ask summary{cursor:pointer;font-weight:500}
+details.ask p{margin-top:8px;color:var(--muted)}
+.asks{display:flex;flex-direction:column;gap:8px}
+
+.cond{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:560px){.cond{grid-template-columns:1fr}}
+.cond div{border:2px solid var(--o-mint);background:var(--surface);border-radius:16px;padding:12px 14px}
+.cond div:last-child{border-color:var(--o-sky)}
+.cond b{display:block;font-family:var(--f-display);font-weight:600}
+
+.t2-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:14px}
+@media (max-width:640px){.t2-grid{grid-template-columns:1fr}}
+#t2Scene{aspect-ratio:16/9;border-radius:14px;background:var(--well)}
+#t2Energy{aspect-ratio:4/3;border-radius:14px;background:var(--well)}
+.seg{display:inline-flex;border:2px solid var(--ink);border-radius:999px;overflow:hidden}
+.seg button{font:inherit;font-size:.85rem;border:0;background:transparent;color:var(--ink);padding:6px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.slider-ea{position:relative;flex:1;min-width:0;display:flex}
+.slider-ea input{width:100%}
+.slider-ea .tick{position:absolute;left:calc(60% - 1px);top:-6px;bottom:-6px;width:2px;background:var(--bad);pointer-events:none;border-radius:2px}
+.verdict{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+@media (max-width:520px){.verdict{grid-template-columns:1fr}}
+.verdict div{border-radius:12px;padding:8px 12px;background:var(--well);font-size:.88rem}
+.verdict .ok{background:var(--good-soft);color:var(--good)}
+.verdict .no{background:var(--bad-soft);color:var(--bad)}
+.verdict b{font-weight:600}
+
+#room{aspect-ratio:640/340;border-radius:14px;background:var(--well)}
+#roomChart{aspect-ratio:640/170;border-radius:14px;background:var(--well)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.82rem;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:5px}
+
+/* quiz */
+.quiz{display:flex;flex-direction:column;gap:18px}
+.q{display:flex;flex-direction:column;gap:8px}
+.q-text{font-weight:500;line-height:1.9}
+.q-text .n{font-family:var(--f-mono);color:var(--br);margin-right:6px}
+.opts{display:flex;flex-direction:column;gap:6px}
+.opt{font:inherit;font-size:.95rem;text-align:left;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:8px 12px;cursor:pointer;display:flex;align-items:center;gap:10px}
+.opt .L{font-family:var(--f-mono);font-weight:600;color:var(--muted)}
+.opt:hover:not(:disabled){border-color:var(--ink)}
+.opt.sel{border-color:var(--ink);background:var(--well)}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt:disabled{cursor:default}
+.ex{font-size:.9rem;padding:10px 12px;border-radius:12px;background:var(--surface);border:1.5px dashed var(--line);line-height:1.9}
+.ex b{font-weight:600}
+.score{font-family:var(--f-display);font-size:1.3rem;font-weight:800}
+.mini-graph{max-width:300px;width:100%}
+.sum{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.sum li{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;align-items:center;border-bottom:1.5px dashed var(--o-lemon);padding-bottom:10px}
+.sum li:last-child{border-bottom:0}
+.sum b{font-weight:600}
+@media (max-width:520px){.sum li{grid-template-columns:1fr;gap:2px}}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-flask" viewBox="0 0 80 90">
+  <path d="M30 6h20v8h-3v18l20 36a10 10 0 0 1-9 15H22a10 10 0 0 1-9-15l20-36V14h-3z" style="fill:#fffdfb;stroke:var(--o-line);stroke-width:3;stroke-linejoin:round"/>
+  <path d="M22 54h36l9 15a7 7 0 0 1-6 11H19a7 7 0 0 1-6-11z" style="fill:var(--o-pink)"/>
+  <path d="M30 6h20v8h-3v18l20 36a10 10 0 0 1-9 15H22a10 10 0 0 1-9-15l20-36V14h-3z" style="fill:none;stroke:var(--o-line);stroke-width:3;stroke-linejoin:round"/>
+  <circle cx="32" cy="66" r="2.8" style="fill:#2c2a3e"/><circle cx="48" cy="66" r="2.8" style="fill:#2c2a3e"/>
+  <circle cx="33" cy="65" r="1" style="fill:#fff"/><circle cx="49" cy="65" r="1" style="fill:#fff"/>
+  <path d="M36 71q4 4 8 0" style="fill:none;stroke:#2c2a3e;stroke-width:2.4;stroke-linecap:round"/>
+  <ellipse cx="25" cy="71" rx="4" ry="2.4" style="fill:var(--blush)"/><ellipse cx="55" cy="71" rx="4" ry="2.4" style="fill:var(--blush)"/>
+  <circle cx="58" cy="22" r="4" style="fill:none;stroke:var(--o-line);stroke-width:2"/><circle cx="66" cy="10" r="2.6" style="fill:none;stroke:var(--o-line);stroke-width:2"/><circle cx="52" cy="4" r="1.8" style="fill:var(--o-sky)"/>
+</symbol>
+<symbol id="i-atom" viewBox="0 0 70 70">
+  <ellipse cx="35" cy="35" rx="31" ry="11" style="fill:none;stroke:var(--o-lilac);stroke-width:3.5"/>
+  <ellipse cx="35" cy="35" rx="31" ry="11" transform="rotate(60 35 35)" style="fill:none;stroke:var(--o-sky);stroke-width:3.5"/>
+  <ellipse cx="35" cy="35" rx="31" ry="11" transform="rotate(-60 35 35)" style="fill:none;stroke:var(--o-pink);stroke-width:3.5"/>
+  <circle cx="35" cy="35" r="12" style="fill:var(--o-peach);stroke:var(--o-line);stroke-width:2.5"/>
+  <circle cx="31" cy="34" r="1.8" style="fill:#2c2a3e"/><circle cx="39" cy="34" r="1.8" style="fill:#2c2a3e"/>
+  <path d="M32.5 38.5q2.5 2.5 5 0" style="fill:none;stroke:#2c2a3e;stroke-width:1.8;stroke-linecap:round"/>
+  <circle cx="64" cy="31" r="3.5" style="fill:var(--o-lemon);stroke:var(--o-line);stroke-width:1.5"/>
+</symbol>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 1C13 8 16 11 23 12C16 13 13 16 12 23C11 16 8 13 1 12C8 11 11 8 12 1Z" style="fill:var(--o-lemon);stroke:var(--o-line);stroke-width:1.5;stroke-linejoin:round"/></symbol>
+<symbol id="i-mol" viewBox="0 0 80 50">
+  <line x1="26" y1="25" x2="54" y2="25" style="stroke:var(--o-line);stroke-width:4"/>
+  <circle cx="22" cy="25" r="17" style="fill:var(--o-peach);stroke:var(--o-line);stroke-width:2.5"/>
+  <circle cx="58" cy="25" r="17" style="fill:var(--o-mint);stroke:var(--o-line);stroke-width:2.5"/>
+  <circle cx="17" cy="23" r="2" style="fill:#2c2a3e"/><circle cx="26" cy="23" r="2" style="fill:#2c2a3e"/><path d="M19 28q2.5 2.5 5 0" style="fill:none;stroke:#2c2a3e;stroke-width:1.8;stroke-linecap:round"/>
+  <circle cx="54" cy="23" r="2" style="fill:#2c2a3e"/><circle cx="63" cy="23" r="2" style="fill:#2c2a3e"/><path d="M56 28q2.5 2.5 5 0" style="fill:none;stroke:#2c2a3e;stroke-width:1.8;stroke-linecap:round"/>
+  <ellipse cx="13" cy="29" rx="3" ry="1.8" style="fill:var(--blush)"/><ellipse cx="67" cy="29" rx="3" ry="1.8" style="fill:var(--blush)"/>
+</symbol>
+<symbol id="i-beaker" viewBox="0 0 64 70">
+  <path d="M10 8h44M14 8v50a6 6 0 0 0 6 6h24a6 6 0 0 0 6-6V8" style="fill:#fffdfb;stroke:var(--o-line);stroke-width:3;stroke-linecap:round;stroke-linejoin:round"/>
+  <path d="M16 34h32v24a4 4 0 0 1-4 4H20a4 4 0 0 1-4-4z" style="fill:var(--o-mint)"/>
+  <circle cx="26" cy="46" r="2.4" style="fill:#2c2a3e"/><circle cx="38" cy="46" r="2.4" style="fill:#2c2a3e"/>
+  <path d="M29 51q3 3 6 0" style="fill:none;stroke:#2c2a3e;stroke-width:2;stroke-linecap:round"/>
+  <circle cx="24" cy="26" r="3" style="fill:none;stroke:var(--o-line);stroke-width:1.8"/><circle cx="36" cy="18" r="2" style="fill:none;stroke:var(--o-line);stroke-width:1.6"/>
+</symbol>
+<symbol id="i-star" viewBox="0 0 40 40"><path d="M20 3l5 10.5 11.5 1.6-8.3 8 2 11.4L20 29l-10.2 5.5 2-11.4-8.3-8L15 13.5z" style="fill:var(--o-pink);stroke:var(--o-line);stroke-width:2;stroke-linejoin:round"/><circle cx="16.5" cy="20" r="1.5" style="fill:#2c2a3e"/><circle cx="23.5" cy="20" r="1.5" style="fill:#2c2a3e"/><path d="M18 23.5q2 2 4 0" style="fill:none;stroke:#2c2a3e;stroke-width:1.5;stroke-linecap:round"/></symbol>
+</defs></svg>
+<div class="wrap">
+<header class="hero">
+ <div class="hero-text">
+  <div class="eyebrow">Kimia · SMA/MA Kelas XI · Laju Reaksi · Subbab 1</div>
+  <h1>Konsep Laju Reaksi dan Teori Tumbukan</h1>
+  <p class="lead">Ada reaksi yang selesai dalam sekejap, seperti kembang api, dan ada yang berlangsung bertahun-tahun, seperti perkaratan besi. Di subbab ini kamu akan belajar cara mengukur seberapa cepat reaksi berjalan dan mengapa reaksi bisa terjadi.</p>
+  <div class="goals" aria-label="Tujuan belajar">
+    <span>Menjelaskan arti laju reaksi</span>
+    <span>Menghitung laju rata-rata dari data</span>
+    <span>Menjelaskan syarat tumbukan efektif</span>
+  </div>
+ </div>
+ <svg class="mascot float" viewBox="0 0 80 90" aria-hidden="true"><use href="#i-flask"/></svg>
+ <svg class="orn twinkle hero-spark" style="top:0;right:150px;width:20px;height:20px" aria-hidden="true"><use href="#i-spark"/></svg>
+</header>
+<div class="squiggle" aria-hidden="true"><svg width="12" height="12" class="twinkle"><use href="#i-spark"/></svg><svg width="120" height="16" viewBox="0 0 120 16"><path d="M2 8q7.5-7 15 0t15 0 15 0 15 0 15 0 15 0 15 0 15 0" style="fill:none;stroke:var(--o-lilac);stroke-width:3;stroke-linecap:round"/></svg><svg width="12" height="12" class="twinkle d2" style="animation-delay:-1.2s"><use href="#i-spark"/></svg></div>
+
+<!-- BAGIAN 1 -->
+<section class="part s1" id="laju">
+  <svg class="orn orn-tr float" aria-hidden="true"><use href="#i-beaker"/></svg>
+  <div class="part-head"><span class="num">1</span><h2>Apa itu laju reaksi?</h2></div>
+  <p><b>Laju reaksi</b> adalah perubahan konsentrasi pereaksi atau produk setiap satuan waktu. Selama reaksi berjalan, pereaksi terus terpakai sehingga konsentrasinya berkurang, sedangkan produk terus terbentuk sehingga konsentrasinya bertambah. Untuk reaksi sederhana R → P:</p>
+  <div class="formula">
+    <span class="fx">v<sub>R</sub> = − <span class="frac"><span>Δ[R]</span><span>Δt</span></span></span>
+    <span class="fx">v<sub>P</sub> = + <span class="frac"><span>Δ[P]</span><span>Δt</span></span></span>
+  </div>
+  <p>Tanda kurung siku [ ] berarti konsentrasi dalam molar (M), yaitu jumlah mol zat dalam setiap liter larutan. Lambang Δ berarti "akhir dikurangi awal". Karena [R] berkurang, nilai Δ[R] negatif. Tanda minus di depannya membuat laju tetap bernilai positif. Satuan laju reaksi yang paling sering dipakai adalah <b>M s⁻¹</b>, dibaca "molar per detik".</p>
+
+  <div class="bench" id="bromin">
+    <div class="bench-title"><span class="tag">Simulasi 1</span><h3>Reaksi bromin dengan asam format</h3><svg class="twinkle" width="16" height="16" aria-hidden="true"><use href="#i-spark"/></svg></div>
+    <div class="equation">
+      <table>
+        <tr><td><span class="br-txt">Br₂(aq)</span></td><td>+</td><td>HCOOH(aq)</td><td>→</td><td>2Br⁻(aq)</td><td>+</td><td>2H⁺(aq)</td><td>+</td><td>CO₂(g)</td></tr>
+        <tr class="lbl"><td>cokelat kemerahan</td><td></td><td>tidak berwarna</td><td></td><td>tidak berwarna</td><td></td><td>tidak berwarna</td><td></td><td>gelembung gas</td></tr>
+      </table>
+    </div>
+    <p>Hanya bromin yang berwarna. Jadi, makin pudar warna larutan, makin sedikit Br₂ yang tersisa. Para ilmuwan memanfaatkan perubahan warna ini untuk mengukur konsentrasi Br₂ dari waktu ke waktu. Jalankan reaksinya dan amati warna larutan serta grafiknya.</p>
+
+    <div class="br-grid">
+      <div class="beaker-box"><canvas id="beaker" aria-label="Gelas kimia berisi larutan bromin"></canvas></div>
+      <div style="min-width:0;display:flex;flex-direction:column;gap:10px">
+        <canvas id="brGraph" aria-label="Grafik konsentrasi terhadap waktu"></canvas>
+        <div class="readouts">
+          <div class="ro"><div class="k">Waktu</div><div class="v" id="roT">0 s</div></div>
+          <div class="ro"><div class="k">[Br₂]</div><div class="v" id="roBr">0,01200 M</div></div>
+          <div class="ro"><div class="k">CO₂ terbentuk</div><div class="v" id="roP">0,00000 M</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn" id="brPlay" type="button">▶ Jalankan</button>
+      <div class="range"><label for="brT">Geser waktu</label><input type="range" id="brT" min="0" max="600" step="1" value="0"></div>
+    </div>
+    <div class="controls">
+      <label class="chk"><input type="checkbox" id="brShowP" checked> Tampilkan kurva produk</label>
+      <label class="chk"><input type="checkbox" id="brShowTan"> Tampilkan garis singgung (laju sesaat)</label>
+    </div>
+    <p id="brTanTxt" class="mono" style="font-size:.88rem;color:var(--muted)" hidden></p>
+
+    <div class="calc">
+      <h3>Hitung laju rata-rata</h3>
+      <p style="font-size:.95rem">Pilih dua titik waktu. Garis putus-putus pada grafik menghubungkan kedua titik, dan kemiringannya adalah laju rata-rata pada selang itu.</p>
+      <div class="controls">
+        <div class="range"><label for="t1">t₁</label><input type="range" id="t1" min="0" max="590" step="10" value="0"><span class="mono" id="t1v">0 s</span></div>
+        <div class="range"><label for="t2">t₂</label><input type="range" id="t2" min="10" max="600" step="10" value="100"><span class="mono" id="t2v">100 s</span></div>
+      </div>
+      <div class="chips">
+        <button class="chip" type="button" data-a="0" data-b="100">Awal: 0–100 s</button>
+        <button class="chip" type="button" data-a="200" data-b="300">Tengah: 200–300 s</button>
+        <button class="chip" type="button" data-a="500" data-b="600">Akhir: 500–600 s</button>
+      </div>
+      <div class="calc-out" id="calcOut"></div>
+    </div>
+  </div>
+
+  <div class="note key"><b>Temuan penting.</b> Bandingkan laju rata-rata di awal dan di akhir reaksi. Laju paling besar di awal, lalu makin kecil. Pada grafik, ini terlihat dari kurva yang curam di awal lalu makin landai. Penyebabnya akan kamu temukan di bagian teori tumbukan.</div>
+
+  <div class="note"><b>Laju dan koefisien reaksi.</b> Pada reaksi di atas, setiap 1 mol Br₂ yang bereaksi menghasilkan 1 mol CO₂ dan 2 mol Br⁻. Akibatnya, laju terbentuknya CO₂ sama dengan laju berkurangnya Br₂, sedangkan laju terbentuknya Br⁻ dua kali lipatnya. Perbandingan laju sama dengan perbandingan koefisien: v<sub>Br₂</sub> : v<sub>CO₂</sub> : v<sub>Br⁻</sub> = 1 : 1 : 2.</div>
+
+  <div class="asks">
+    <h3>Pertanyaan pemantik</h3>
+    <details class="ask"><summary>1. Bagaimana konsentrasi pereaksi (Br₂) berubah selama reaksi?</summary><p>Konsentrasi Br₂ terus berkurang karena Br₂ terpakai. Warna larutan memudar mengikuti penurunan ini.</p></details>
+    <details class="ask"><summary>2. Bagaimana konsentrasi produk (CO₂) berubah?</summary><p>Konsentrasi produk terus bertambah dari nol. Karena perbandingan koefisiennya 1 : 1, setiap pengurangan Br₂ diikuti penambahan CO₂ yang sama besar.</p></details>
+    <details class="ask"><summary>3. Bagaimana kemiringan kurva di awal dibandingkan menjelang akhir reaksi?</summary><p>Di awal kurva curam, artinya laju besar. Menjelang akhir kurva landai, artinya laju kecil. Laju reaksi menurun seiring berkurangnya konsentrasi pereaksi.</p></details>
+  </div>
+
+  <div class="bench">
+    <div class="bench-title"><span class="tag">Cek pemahaman</span><h3>Bagian 1</h3></div>
+    <div class="quiz" id="quick1"></div>
+  </div>
+</section>
+
+<div class="squiggle" aria-hidden="true"><svg width="12" height="12" class="twinkle"><use href="#i-spark"/></svg><svg width="120" height="16" viewBox="0 0 120 16"><path d="M2 8q7.5-7 15 0t15 0 15 0 15 0 15 0 15 0 15 0 15 0" style="fill:none;stroke:var(--o-lilac);stroke-width:3;stroke-linecap:round"/></svg><svg width="12" height="12" class="twinkle d2" style="animation-delay:-1.2s"><use href="#i-spark"/></svg></div>
+<section class="part s2" id="tumbukan">
+  <svg class="orn orn-tr float d2" aria-hidden="true"><use href="#i-atom"/></svg>
+  <div class="part-head"><span class="num">2</span><h2>Teori tumbukan</h2></div>
+  <p>Menurut teori tumbukan, reaksi kimia terjadi karena partikel-partikel pereaksi saling bertumbukan. Namun, <b>tidak semua tumbukan menghasilkan reaksi</b>. Tumbukan yang menghasilkan reaksi disebut <b>tumbukan efektif</b>. Agar efektif, tumbukan harus memenuhi dua syarat sekaligus:</p>
+  <div class="cond">
+    <div><b>1. Energinya cukup</b>Energi tumbukan minimal sama dengan energi aktivasi (E<sub>a</sub>).</div>
+    <div><b>2. Orientasinya tepat</b>Bagian partikel yang reaktif harus saling bertemu.</div>
+  </div>
+  <p><b>Energi aktivasi (E<sub>a</sub>)</b> adalah energi minimum yang diperlukan agar tumbukan menghasilkan reaksi. Bayangkan E<sub>a</sub> sebagai bukit yang harus didaki pereaksi sebelum berubah menjadi produk. Puncak bukit disebut <b>keadaan transisi</b>.</p>
+
+  <div class="bench" id="tester">
+    <div class="bench-title"><span class="tag">Simulasi 2</span><h3>Uji satu tumbukan</h3><svg class="twinkle" width="16" height="16" aria-hidden="true"><use href="#i-spark"/></svg></div>
+    <p style="font-size:.95rem">Atur energi tumbukan dan arah partikel, lalu tumbukkan. Titik kuning menandai bagian reaktif partikel. Diagram di sebelah kanan menunjukkan apakah energi tumbukan cukup untuk melewati puncak E<sub>a</sub>.</p>
+    <div class="t2-grid">
+      <canvas id="t2Scene" aria-label="Animasi dua partikel bertumbukan"></canvas>
+      <canvas id="t2Energy" aria-label="Diagram energi potensial"></canvas>
+    </div>
+    <div class="controls">
+      <div class="range"><label for="t2E">Energi tumbukan</label><div class="slider-ea"><input type="range" id="t2E" min="0" max="100" step="1" value="80"><span class="tick" aria-hidden="true"></span></div><span class="mono" id="t2Ev" style="min-width:3ch">80</span></div>
+    </div>
+    <div class="controls">
+      <span style="font-size:.85rem;color:var(--muted)">Orientasi</span>
+      <div class="seg" role="group" aria-label="Orientasi tumbukan">
+        <button type="button" id="oriYes" aria-pressed="true">Sisi reaktif berhadapan</button>
+        <button type="button" id="oriNo" aria-pressed="false">Tidak berhadapan</button>
+      </div>
+      <button class="btn" type="button" id="t2Go">Tumbukkan</button>
+    </div>
+    <div class="chips">
+      <span style="font-size:.82rem;color:var(--muted);align-self:center">Coba contoh:</span>
+      <button class="chip" type="button" data-e="80" data-o="1">Energi tinggi, orientasi tepat</button>
+      <button class="chip" type="button" data-e="80" data-o="0">Energi tinggi, orientasi salah</button>
+      <button class="chip" type="button" data-e="35" data-o="1">Energi rendah, orientasi tepat</button>
+    </div>
+    <div class="verdict" aria-live="polite">
+      <div id="vE"></div><div id="vO"></div><div id="vR"></div>
+    </div>
+  </div>
+
+  <div class="note key"><b>Hubungan dengan laju reaksi.</b> Makin banyak tumbukan efektif yang terjadi setiap detik, makin cepat reaksi berlangsung.</div>
+
+  <div class="bench" id="roomBench">
+    <div class="bench-title"><span class="tag">Simulasi 3</span><h3>Ruang partikel: dari tumbukan ke laju reaksi</h3><svg class="twinkle" width="16" height="16" aria-hidden="true"><use href="#i-spark"/></svg></div>
+    <p style="font-size:.95rem">Di dalam wadah ini partikel A dan B bergerak acak. Jika A dan B bertumbukan secara efektif, keduanya bergabung menjadi produk AB. Jalankan simulasi dan perhatikan grafik jumlah A di bawahnya.</p>
+    <div class="legend">
+      <span><i style="background:var(--br)"></i>Partikel A</span>
+      <span><i style="background:var(--teal)"></i>Partikel B</span>
+      <span><i style="background:linear-gradient(90deg,var(--br) 50%,var(--teal) 50%)"></i>Produk AB</span>
+      <span><i style="background:var(--site)"></i>Sisi reaktif</span>
+    </div>
+    <canvas id="room" aria-label="Simulasi partikel A dan B bertumbukan"></canvas>
+    <div class="readouts" style="grid-template-columns:repeat(4,minmax(0,1fr))" id="roomRo">
+      <div class="ro"><div class="k">A tersisa</div><div class="v" id="rA">25</div></div>
+      <div class="ro"><div class="k">Tumbukan A–B</div><div class="v" id="rC">0</div></div>
+      <div class="ro"><div class="k">Efektif</div><div class="v" id="rE">0</div></div>
+      <div class="ro"><div class="k">Reaksi per detik</div><div class="v" id="rR">0,0</div></div>
+    </div>
+    <canvas id="roomChart" aria-label="Grafik jumlah partikel A terhadap waktu"></canvas>
+    <div class="controls">
+      <button class="btn" type="button" id="roomPlay">▶ Mulai</button>
+      <button class="btn ghost" type="button" id="roomReset">Ulangi</button>
+      <label class="chk"><input type="checkbox" id="roomMarks" checked> Tandai tumbukan</label>
+    </div>
+    <div class="controls">
+      <div class="range"><label for="roomN">Jumlah A dan B</label><input type="range" id="roomN" min="10" max="40" step="1" value="25"><span class="mono" id="roomNv">25</span></div>
+      <div class="range"><label for="roomEn">Energi gerak</label><input type="range" id="roomEn" min="1" max="5" step="1" value="3"><span class="mono" id="roomEnv">sedang</span></div>
+    </div>
+    <p style="font-size:.88rem;color:var(--muted)">Lingkaran hijau menandai tumbukan efektif, lingkaran abu-abu menandai tumbukan tidak efektif. Energi gerak partikel bertambah jika suhu dinaikkan; pengaruh suhu dibahas di subbab berikutnya.</p>
+  </div>
+
+  <div class="note key"><b>Inilah jawaban dari Simulasi 1.</b> Di awal reaksi partikel pereaksi masih banyak, sehingga tumbukan efektif sering terjadi dan laju besar. Seiring waktu pereaksi berkurang, tumbukan efektif makin jarang, sehingga laju menurun. Itulah sebabnya kurva [Br₂] curam di awal lalu makin landai.</div>
+
+  <div class="bench">
+    <div class="bench-title"><span class="tag">Cek pemahaman</span><h3>Bagian 2</h3></div>
+    <div class="quiz" id="quick2"></div>
+  </div>
+</section>
+
+<div class="squiggle" aria-hidden="true"><svg width="12" height="12" class="twinkle"><use href="#i-spark"/></svg><svg width="120" height="16" viewBox="0 0 120 16"><path d="M2 8q7.5-7 15 0t15 0 15 0 15 0 15 0 15 0 15 0 15 0" style="fill:none;stroke:var(--o-lilac);stroke-width:3;stroke-linecap:round"/></svg><svg width="12" height="12" class="twinkle d2" style="animation-delay:-1.2s"><use href="#i-spark"/></svg></div>
+<section class="part s3">
+  <svg class="orn orn-tr float d3" aria-hidden="true"><use href="#i-star"/></svg>
+  <div class="part-head"><span class="num">3</span><h2>Rangkuman</h2></div>
+  <ul class="sum">
+    <li><b>Laju reaksi</b><span>Perubahan konsentrasi pereaksi atau produk per satuan waktu, biasanya dalam M s⁻¹.</span></li>
+    <li><b>Rumus</b><span>v<sub>R</sub> = − <span class="frac"><span>Δ[R]</span><span>Δt</span></span> untuk pereaksi yang berkurang, dan v<sub>P</sub> = + <span class="frac"><span>Δ[P]</span><span>Δt</span></span> untuk produk yang bertambah. Laju selalu positif.</span></li>
+    <li><b>Perbandingan laju</b><span>Sama dengan perbandingan koefisien reaksi.</span></li>
+    <li><b>Pola laju</b><span>Laju paling besar di awal, lalu menurun karena konsentrasi pereaksi berkurang.</span></li>
+    <li><b>Teori tumbukan</b><span>Reaksi terjadi karena tumbukan antarpartikel pereaksi, tetapi hanya tumbukan efektif yang menghasilkan produk.</span></li>
+    <li><b>Tumbukan efektif</b><span>Energi tumbukan ≥ E<sub>a</sub> dan orientasi tepat.</span></li>
+    <li><b>Energi aktivasi</b><span>Energi minimum yang diperlukan agar tumbukan menghasilkan reaksi.</span></li>
+  </ul>
+</section>
+
+<div class="squiggle" aria-hidden="true"><svg width="12" height="12" class="twinkle"><use href="#i-spark"/></svg><svg width="120" height="16" viewBox="0 0 120 16"><path d="M2 8q7.5-7 15 0t15 0 15 0 15 0 15 0 15 0 15 0 15 0" style="fill:none;stroke:var(--o-lilac);stroke-width:3;stroke-linecap:round"/></svg><svg width="12" height="12" class="twinkle d2" style="animation-delay:-1.2s"><use href="#i-spark"/></svg></div>
+<section class="part s4" id="evaluasi">
+  <svg class="orn orn-tr float" style="width:78px;top:-20px" aria-hidden="true"><use href="#i-mol"/></svg>
+  <div class="part-head"><span class="num">4</span><h2>Evaluasi akhir</h2></div>
+  <p>Jawab ketujuh soal, lalu tekan <b>Periksa jawaban</b> untuk melihat skor dan pembahasan.</p>
+  <div class="quiz" id="final"></div>
+  <div class="controls">
+    <button class="btn" type="button" id="finalCheck">Periksa jawaban</button>
+    <button class="btn ghost" type="button" id="finalReset">Ulangi</button>
+    <span class="score" id="finalScore" aria-live="polite"></span>
+  </div>
+</section>
+</div>
+
+<script>
+(function(){
+/* ---------- helpers ---------- */
+const $=id=>document.getElementById(id);
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function setup(cv){const r=cv.getBoundingClientRect();const d=window.devicePixelRatio||1;const w=Math.max(1,r.width),h=Math.max(1,r.height);cv.width=Math.round(w*d);cv.height=Math.round(h*d);const ctx=cv.getContext('2d');ctx.setTransform(d,0,0,d,0,0);return{ctx,w,h};}
+const fx=(x,d)=>x.toFixed(d).replace('.',',');
+const SUP={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
+function sci(x,sig){sig=sig||2;if(x===0)return '0';let e=Math.floor(Math.log10(Math.abs(x)));let m=x/Math.pow(10,e);let ms=m.toFixed(sig-1);if(parseFloat(ms)>=10){e+=1;ms=(m/10).toFixed(sig-1);}return ms.replace('.',',')+' × 10'+String(e).split('').map(c=>SUP[c]).join('');}
+function line(ctx,a,b,c,d){ctx.beginPath();ctx.moveTo(a,b);ctx.lineTo(c,d);ctx.stroke();}
+const redraws=[];
+function redrawAll(){redraws.forEach(f=>f());}
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',redrawAll);
+new MutationObserver(redrawAll).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+const ro=new ResizeObserver(()=>redrawAll());
+
+/* ---------- SIMULASI 1: BROMIN ---------- */
+const C0=0.0120,K=0.0035,TMAX=600;
+const br=t=>C0*Math.exp(-K*t);
+const S1={t:0,playing:false,last:0,bubbles:[]};
+const brCv=$('brGraph'),bkCv=$('beaker');
+const r5=x=>Math.round(x*1e5)/1e5;
+
+function drawGraph(){
+  const {ctx,w,h}=setup(brCv);
+  const L=62,R=14,T=14,B=42,pw=w-L-R,ph=h-T-B;
+  const X=t=>L+t/TMAX*pw, Y=c=>T+ph-(c/C0)*ph;
+  ctx.clearRect(0,0,w,h);
+  ctx.lineWidth=1;ctx.strokeStyle=css('--grid');ctx.fillStyle=css('--muted');
+  ctx.font='11px '+css('--f-mono');
+  for(let i=0;i<=6;i++){const c=i*0.002,y=Y(c);line(ctx,L,y,L+pw,y);ctx.textAlign='right';ctx.textBaseline='middle';ctx.fillText(fx(c,3),L-6,y);}
+  for(let t=0;t<=TMAX;t+=100){const x=X(t);line(ctx,x,T,x,T+ph);ctx.textAlign='center';ctx.textBaseline='top';ctx.fillText(String(t),x,T+ph+6);}
+  ctx.strokeStyle=css('--muted');line(ctx,L,T,L,T+ph);line(ctx,L,T+ph,L+pw,T+ph);
+  ctx.font='12px '+css('--f-body');ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText('Waktu (s)',L+pw/2,h-2);
+  ctx.save();ctx.translate(12,T+ph/2);ctx.rotate(-Math.PI/2);ctx.textBaseline='middle';ctx.fillText('Konsentrasi (M)',0,0);ctx.restore();
+
+  // product curve
+  const showP=$('brShowP').checked;
+  if(showP){ctx.strokeStyle=css('--teal');ctx.lineWidth=2.5;ctx.beginPath();for(let t=0;t<=TMAX;t+=4){const y=Y(C0-br(t));t?ctx.lineTo(X(t),y):ctx.moveTo(X(t),y);}ctx.stroke();}
+  // Br2 curve
+  ctx.strokeStyle=css('--br');ctx.lineWidth=2.5;ctx.beginPath();for(let t=0;t<=TMAX;t+=4){const y=Y(br(t));t?ctx.lineTo(X(t),y):ctx.moveTo(X(t),y);}ctx.stroke();
+  // legend
+  ctx.font='12px '+css('--f-body');ctx.textBaseline='middle';ctx.textAlign='left';
+  const lx=L+pw-118;ctx.fillStyle=css('--br');ctx.fillRect(lx,T+8,14,3);ctx.fillStyle=css('--ink');ctx.fillText('[Br₂] pereaksi',lx+20,T+10);
+  if(showP){ctx.fillStyle=css('--teal');ctx.fillRect(lx,T+26,14,3);ctx.fillStyle=css('--ink');ctx.fillText('[CO₂] produk',lx+20,T+28);}
+
+  // secant
+  const a=+$('t1').value,b=+$('t2').value;
+  const ya=Y(br(a)),yb=Y(br(b));
+  ctx.strokeStyle=css('--ink');ctx.lineWidth=1.5;ctx.setLineDash([5,4]);line(ctx,X(a),ya,X(b),yb);ctx.setLineDash([]);
+  [[a,ya],[b,yb]].forEach(([t,y],i)=>{ctx.fillStyle=css('--surface');ctx.strokeStyle=css('--ink');ctx.lineWidth=2;ctx.beginPath();ctx.arc(X(t),y,4.5,0,7);ctx.fill();ctx.stroke();ctx.fillStyle=css('--ink');ctx.font='11px '+css('--f-mono');ctx.textAlign='left';ctx.textBaseline='bottom';ctx.fillText(i?'t₂':'t₁',X(t)+6,y-4);});
+
+  // tangent
+  if($('brShowTan').checked){const t=S1.t,c=br(t),m=-K*c;const t0=Math.max(0,t-90),t1=Math.min(TMAX,t+90);ctx.strokeStyle=css('--bad');ctx.lineWidth=1.8;line(ctx,X(t0),Y(c+m*(t0-t)),X(t1),Y(c+m*(t1-t)));}
+
+  // time marker
+  const x=X(S1.t);ctx.strokeStyle=css('--muted');ctx.lineWidth=1;ctx.setLineDash([2,3]);line(ctx,x,T,x,T+ph);ctx.setLineDash([]);
+  ctx.fillStyle=css('--br');ctx.beginPath();ctx.arc(x,Y(br(S1.t)),5,0,7);ctx.fill();
+  if(showP){ctx.fillStyle=css('--teal');ctx.beginPath();ctx.arc(x,Y(C0-br(S1.t)),5,0,7);ctx.fill();}
+}
+
+function drawBeaker(){
+  const {ctx,w,h}=setup(bkCv);
+  ctx.clearRect(0,0,w,h);
+  const bx=w*0.14,bw=w*0.72,top=h*0.12,bot=h*0.94,liq=h*0.34;
+  const f=br(S1.t)/C0;
+  // liquid
+  ctx.save();ctx.beginPath();ctx.moveTo(bx,top);ctx.lineTo(bx,bot-10);ctx.quadraticCurveTo(bx,bot,bx+10,bot);ctx.lineTo(bx+bw-10,bot);ctx.quadraticCurveTo(bx+bw,bot,bx+bw,bot-10);ctx.lineTo(bx+bw,top);ctx.closePath();ctx.clip();
+  ctx.fillStyle=css('--water');ctx.fillRect(bx,liq,bw,bot-liq);
+  ctx.globalAlpha=Math.max(0,Math.min(1,f*0.95));ctx.fillStyle=css('--brliquid');ctx.fillRect(bx,liq,bw,bot-liq);ctx.globalAlpha=1;
+  // bubbles
+  ctx.strokeStyle=css('--ink');ctx.globalAlpha=0.45;ctx.lineWidth=1;
+  S1.bubbles.forEach(b=>{ctx.beginPath();ctx.arc(bx+b.x*bw,b.y*h,b.r,0,7);ctx.stroke();});
+  ctx.globalAlpha=1;ctx.restore();
+  // glass
+  ctx.strokeStyle=css('--glass');ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(bx-6,top-4);ctx.lineTo(bx,top);ctx.lineTo(bx,bot-10);ctx.quadraticCurveTo(bx,bot,bx+10,bot);ctx.lineTo(bx+bw-10,bot);ctx.quadraticCurveTo(bx+bw,bot,bx+bw,bot-10);ctx.lineTo(bx+bw,top);ctx.stroke();
+  ctx.lineWidth=1.5;for(let i=1;i<=4;i++){const y=liq+(bot-liq)*i/5;line(ctx,bx+bw-14,y,bx+bw,y);}
+  ctx.fillStyle=css('--muted');ctx.font='11px '+css('--f-body');ctx.textAlign='center';ctx.textBaseline='top';
+}
+
+function updateReadouts(){
+  $('roT').textContent=Math.round(S1.t)+' s';
+  $('roBr').textContent=fx(br(S1.t),5)+' M';
+  $('roP').textContent=fx(C0-br(S1.t),5)+' M';
+  if($('brShowTan').checked){$('brTanTxt').hidden=false;$('brTanTxt').textContent='Laju sesaat pada t = '+Math.round(S1.t)+' s ≈ '+sci(K*br(S1.t))+' M s⁻¹ (kemiringan garis merah)';}else $('brTanTxt').hidden=true;
+}
+function updateCalc(){
+  let a=+$('t1').value,b=+$('t2').value;
+  $('t1v').textContent=a+' s';$('t2v').textContent=b+' s';
+  const ca=r5(br(a)),cb=r5(br(b));
+  const v=-(cb-ca)/(b-a);
+  const fr=(n,d)=>'<span class="frac"><span>'+n+'</span><span>'+d+'</span></span>';
+  $('calcOut').innerHTML=
+   '<div>[Br₂] pada t₁ = '+a+' s : '+fx(ca,5)+' M</div>'+
+   '<div>[Br₂] pada t₂ = '+b+' s : '+fx(cb,5)+' M</div>'+
+   '<div>v = − '+fr('Δ[Br₂]','Δt')+' = − '+fr('('+fx(cb,5)+' − '+fx(ca,5)+') M','('+b+' − '+a+') s')+' = '+fr(fx(ca-cb,5)+' M',(b-a)+' s')+'</div>'+
+   '<div>v = <span class="res">'+sci(v)+' M s⁻¹</span></div>';
+}
+function renderS1(){drawGraph();drawBeaker();updateReadouts();}
+redraws.push(renderS1);ro.observe(brCv);ro.observe(bkCv);
+
+function s1Loop(ts){
+  if(!S1.playing)return;
+  const dt=S1.last?Math.min(0.05,(ts-S1.last)/1000):0;S1.last=ts;
+  S1.t=Math.min(TMAX,S1.t+dt*50);
+  // bubbles proportional to rate
+  const rate=br(S1.t)/C0;
+  if(Math.random()<rate*dt*30) S1.bubbles.push({x:0.1+Math.random()*0.8,y:0.92,r:1.5+Math.random()*2.5,v:0.12+Math.random()*0.1});
+  S1.bubbles.forEach(b=>{b.y-=b.v*dt;b.x+=(Math.random()-0.5)*0.004;});
+  S1.bubbles=S1.bubbles.filter(b=>b.y>0.36);
+  $('brT').value=Math.round(S1.t);
+  renderS1();
+  if(S1.t>=TMAX){S1.playing=false;$('brPlay').textContent='↺ Ulangi';return;}
+  requestAnimationFrame(s1Loop);
+}
+$('brPlay').addEventListener('click',()=>{
+  if(S1.playing){S1.playing=false;$('brPlay').textContent='▶ Lanjutkan';return;}
+  if(S1.t>=TMAX){S1.t=0;S1.bubbles=[];}
+  S1.playing=true;S1.last=0;$('brPlay').textContent='❚❚ Jeda';requestAnimationFrame(s1Loop);
+});
+$('brT').addEventListener('input',e=>{S1.t=+e.target.value;S1.playing=false;S1.bubbles=[];$('brPlay').textContent=S1.t>=TMAX?'↺ Ulangi':'▶ Jalankan';renderS1();});
+$('brShowP').addEventListener('change',renderS1);
+$('brShowTan').addEventListener('change',renderS1);
+function setRange(a,b){$('t1').value=a;$('t2').value=b;updateCalc();drawGraph();}
+$('t1').addEventListener('input',()=>{let a=+$('t1').value,b=+$('t2').value;if(a>=b){b=Math.min(600,a+10);$('t2').value=b;}updateCalc();drawGraph();});
+$('t2').addEventListener('input',()=>{let a=+$('t1').value,b=+$('t2').value;if(b<=a){a=Math.max(0,b-10);$('t1').value=a;}updateCalc();drawGraph();});
+document.querySelectorAll('#bromin .chip').forEach(c=>c.addEventListener('click',()=>setRange(+c.dataset.a,+c.dataset.b)));
+updateCalc();
+
+/* ---------- SIMULASI 2: UJI TUMBUKAN ---------- */
+const EA=60, ER=0.30, EP=0.80, EPR=0.15, EMAX=1.25;
+const curve=x=>{if(x<=0.18)return ER;if(x<0.5)return ER+(EP-ER)*(1-Math.cos(Math.PI*(x-0.18)/0.32))/2;if(x<0.82)return EP+(EPR-EP)*(1-Math.cos(Math.PI*(x-0.5)/0.32))/2;return EPR;};
+const pH=e=>ER+e/EA*(EP-ER);
+const T2={e:80,orient:true,phase:'idle',ax:0.14,bx:0.86,ball:0.06,turn:0.5,eff:false,flash:0,last:0,react:0,dist0:0,merged:false};
+const scCv=$('t2Scene'),enCv=$('t2Energy');
+
+function computeTurn(){
+  const h=pH(T2.e);
+  if(h>=EP) return T2.orient?0.5:0.42;
+  for(let x=0.06;x<=0.5;x+=0.002){if(curve(x)>=h)return Math.max(0.06,x);}
+  return 0.5;
+}
+function drawMol(ctx,x,y,r,color,siteAng,mood){
+  ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();
+  ctx.strokeStyle=css('--o-line');ctx.lineWidth=2;ctx.stroke();
+  // wajah lucu
+  const ink='#2c2a3e';ctx.fillStyle=ink;
+  ctx.beginPath();ctx.arc(x-r*0.3,y+r*0.05,r*0.1,0,7);ctx.arc(x+r*0.3,y+r*0.05,r*0.1,0,7);ctx.fill();
+  ctx.fillStyle=css('--blush');ctx.globalAlpha=.85;ctx.beginPath();ctx.ellipse(x-r*0.52,y+r*0.28,r*0.14,r*0.08,0,0,7);ctx.ellipse(x+r*0.52,y+r*0.28,r*0.14,r*0.08,0,0,7);ctx.fill();ctx.globalAlpha=1;
+  ctx.strokeStyle=ink;ctx.lineWidth=Math.max(1.5,r*0.07);ctx.lineCap='round';ctx.beginPath();
+  if(mood==='sad'){ctx.arc(x,y+r*0.48,r*0.14,Math.PI*1.15,Math.PI*1.85);}
+  else if(mood==='happy'){ctx.arc(x,y+r*0.22,r*0.2,0.15*Math.PI,0.85*Math.PI);}
+  else{ctx.arc(x,y+r*0.26,r*0.12,0.2*Math.PI,0.8*Math.PI);}
+  ctx.stroke();
+  ctx.fillStyle=css('--site');ctx.strokeStyle=css('--ink');ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.arc(x+Math.cos(siteAng)*r*0.72,y+Math.sin(siteAng)*r*0.72,r*0.26,0,7);ctx.fill();ctx.stroke();
+}
+function drawScene(){
+  const {ctx,w,h}=setup(scCv);ctx.clearRect(0,0,w,h);
+  const r=Math.min(26,w*0.055),cy=h*0.58;
+  const aAng=T2.orient?0:-Math.PI/2, bAng=T2.orient?Math.PI:Math.PI/2;
+  const ax=T2.ax*w,bx=T2.bx*w;
+  // energy arrows
+  if(T2.phase==='idle'||T2.phase==='approach'){
+    const len=12+T2.e*0.55*(w/500);
+    ctx.strokeStyle=css('--ink');ctx.fillStyle=css('--ink');ctx.lineWidth=2;
+    const arr=(x0,dir)=>{const y=cy-r-18;line(ctx,x0-dir*len/2,y,x0+dir*len/2,y);ctx.beginPath();ctx.moveTo(x0+dir*len/2,y);ctx.lineTo(x0+dir*(len/2-7),y-5);ctx.lineTo(x0+dir*(len/2-7),y+5);ctx.fill();};
+    arr(ax,1);arr(bx,-1);
+    ctx.font='11px '+css('--f-body');ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillStyle=css('--muted');
+    ctx.fillText('energi',ax,cy-r-26);ctx.fillText('energi',bx,cy-r-26);
+  }
+  const mood=T2.phase==='done'?(T2.eff?'happy':'sad'):(T2.phase==='bounce'?'sad':'');
+  if(T2.merged){
+    const mx=w/2;drawMol(ctx,mx-r*0.8,cy,r,css('--o-peach'),0,'happy');drawMol(ctx,mx+r*0.8,cy,r,css('--o-mint'),Math.PI,'happy');
+  }else{
+    drawMol(ctx,ax,cy,r,css('--o-peach'),aAng,mood);drawMol(ctx,bx,cy,r,css('--o-mint'),bAng,mood);
+  }
+  if(T2.flash>0){ctx.strokeStyle=T2.eff?css('--good'):css('--bad');ctx.globalAlpha=T2.flash;ctx.lineWidth=3;ctx.beginPath();ctx.arc(w/2,cy,r*1.6+(1-T2.flash)*r*1.5,0,7);ctx.stroke();ctx.globalAlpha=1;}
+  ctx.font='600 13px '+css('--f-body');ctx.textAlign='center';ctx.textBaseline='top';
+  let msg='',col=css('--muted');
+  if(T2.phase==='done'){msg=T2.eff?'Bereaksi: produk terbentuk':'Terpental: tidak bereaksi';col=T2.eff?css('--good'):css('--bad');}
+  else if(T2.phase==='idle')msg='Tekan "Tumbukkan"';
+  ctx.fillStyle=col;ctx.fillText(msg,w/2,10);
+}
+function drawEnergy(){
+  const {ctx,w,h}=setup(enCv);ctx.clearRect(0,0,w,h);
+  const L=26,R=10,T=22,B=26,pw=w-L-R,ph=h-T-B;
+  const X=x=>L+x*pw, Y=e=>T+ph-(e/EMAX)*ph;
+  ctx.strokeStyle=css('--muted');ctx.lineWidth=1;line(ctx,L,T-6,L,T+ph);line(ctx,L,T+ph,L+pw,T+ph);
+  ctx.font='11px '+css('--f-body');ctx.fillStyle=css('--muted');
+  ctx.save();ctx.translate(11,T+ph/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Energi potensial',0,0);ctx.restore();
+  ctx.textAlign='center';ctx.textBaseline='top';ctx.fillText('Jalannya reaksi →',L+pw/2,T+ph+6);
+  // peak dashed
+  ctx.setLineDash([4,4]);line(ctx,X(0.03),Y(EP),X(0.5),Y(EP));line(ctx,X(0.03),Y(ER),X(0.3),Y(ER));ctx.setLineDash([]);
+  // curve
+  ctx.strokeStyle=css('--ink');ctx.lineWidth=2.5;ctx.beginPath();for(let x=0;x<=1.0001;x+=0.01){const y=Y(curve(x));x?ctx.lineTo(X(x),y):ctx.moveTo(X(x),y);}ctx.stroke();
+  // Ea arrow
+  const axx=X(0.1);ctx.strokeStyle=css('--bad');ctx.fillStyle=css('--bad');ctx.lineWidth=2;line(ctx,axx,Y(ER),axx,Y(EP)+6);
+  ctx.beginPath();ctx.moveTo(axx,Y(EP));ctx.lineTo(axx-5,Y(EP)+8);ctx.lineTo(axx+5,Y(EP)+8);ctx.fill();
+  ctx.font='600 12px '+css('--f-body');ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText('Eₐ',axx+6,(Y(ER)+Y(EP))/2);
+  // labels
+  ctx.fillStyle=css('--muted');ctx.font='11px '+css('--f-body');
+  ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText('Keadaan transisi',X(0.5),Y(EP)-6);
+  ctx.textBaseline='top';ctx.fillText('Pereaksi',X(0.17),Y(ER)+6);ctx.fillText('Produk',X(0.9),Y(EPR)+6);
+  // particle energy line
+  const hp=Math.min(EMAX-0.02,pH(T2.e));
+  ctx.strokeStyle=css('--br');ctx.lineWidth=1.5;ctx.setLineDash([2,3]);line(ctx,X(0.03),Y(hp),X(0.62),Y(hp));ctx.setLineDash([]);
+  ctx.fillStyle=css('--br');ctx.textAlign='left';ctx.textBaseline='bottom';ctx.fillText('energi tumbukan',X(0.62)+4>w-80?X(0.52):X(0.62)+4,Y(hp)-2);
+  // ball
+  ctx.fillStyle=css('--br');ctx.strokeStyle=css('--surface');ctx.lineWidth=2;ctx.beginPath();ctx.arc(X(T2.ball),Y(curve(T2.ball))-7,7,0,7);ctx.fill();ctx.stroke();
+}
+function verdict(){
+  const okE=T2.e>=EA, okO=T2.orient;
+  $('vE').className=okE?'ok':'no';$('vE').innerHTML=(okE?'✓ ':'✗ ')+'<b>Energi</b> '+T2.e+(okE?' ≥ ':' < ')+'Eₐ ('+EA+')';
+  $('vO').className=okO?'ok':'no';$('vO').innerHTML=(okO?'✓ ':'✗ ')+'<b>Orientasi</b> '+(okO?'tepat':'tidak tepat');
+  const eff=okE&&okO;$('vR').className=eff?'ok':'no';$('vR').innerHTML='<b>'+(eff?'Tumbukan efektif':'Tumbukan tidak efektif')+'</b>';
+}
+function renderT2(){drawScene();drawEnergy();verdict();}
+redraws.push(()=>{drawScene();drawEnergy();});ro.observe(scCv);ro.observe(enCv);
+
+function t2Reset(){T2.phase='idle';T2.ax=0.14;T2.bx=0.86;T2.ball=0.06;T2.flash=0;T2.merged=false;}
+function t2Loop(ts){
+  const dt=T2.last?Math.min(0.05,(ts-T2.last)/1000):0;T2.last=ts;
+  const w=scCv.getBoundingClientRect().width||500;const r=Math.min(26,w*0.055);const gap=2*r/w;
+  const v=0.10+T2.e/100*0.28;
+  const target=T2.eff?0.5:T2.turn;
+  if(T2.phase==='approach'){
+    T2.ax+=v*dt;T2.bx-=v*dt;
+    const prog=Math.min(1,(T2.ax-0.14)/T2.dist0);
+    T2.ball=0.06+prog*(target-0.06);
+    if(T2.bx-T2.ax<=gap){T2.ax=0.5-gap/2;T2.bx=0.5+gap/2;T2.flash=1;
+      if(T2.eff){T2.phase='react';T2.react=0;T2.merged=true;}else{T2.phase='bounce';}}
+  }else if(T2.phase==='react'){
+    T2.react+=dt;T2.flash=Math.max(0,1-T2.react/0.8);
+    T2.ball=0.5+Math.min(1,T2.react/1.0)*0.44;
+    if(T2.react>=1.0){T2.phase='done';}
+  }else if(T2.phase==='bounce'){
+    T2.flash=Math.max(0,T2.flash-dt*1.4);
+    T2.ax-=v*dt;T2.bx+=v*dt;
+    const prog=Math.min(1,(T2.ax-0.14)/T2.dist0);
+    T2.ball=0.06+Math.max(0,prog)*(target-0.06);
+    if(T2.ax<=0.14){T2.ax=0.14;T2.bx=0.86;T2.ball=0.06;T2.phase='done';}
+  }
+  drawScene();drawEnergy();
+  if(T2.phase!=='done'||T2.flash>0){if(T2.phase==='done')T2.flash=Math.max(0,T2.flash-dt*1.4);requestAnimationFrame(t2Loop);}
+  else{drawScene();}
+}
+function t2Go(){
+  t2Reset();T2.eff=T2.e>=EA&&T2.orient;T2.turn=computeTurn();
+  const w=scCv.getBoundingClientRect().width||500;const r=Math.min(26,w*0.055);
+  T2.dist0=(0.72-2*r/w)/2;
+  if(reduce){T2.phase='done';T2.merged=T2.eff;T2.ball=T2.eff?0.94:0.06;renderT2();return;}
+  T2.phase='approach';T2.last=0;requestAnimationFrame(t2Loop);
+}
+function setOri(o){T2.orient=o;$('oriYes').setAttribute('aria-pressed',o);$('oriNo').setAttribute('aria-pressed',!o);t2Reset();renderT2();}
+$('t2E').addEventListener('input',e=>{T2.e=+e.target.value;$('t2Ev').textContent=T2.e;if(T2.phase!=='approach'&&T2.phase!=='react'&&T2.phase!=='bounce'){t2Reset();}renderT2();});
+$('oriYes').addEventListener('click',()=>setOri(true));
+$('oriNo').addEventListener('click',()=>setOri(false));
+$('t2Go').addEventListener('click',t2Go);
+document.querySelectorAll('#tester .chip').forEach(c=>c.addEventListener('click',()=>{T2.e=+c.dataset.e;$('t2E').value=T2.e;$('t2Ev').textContent=T2.e;setOri(c.dataset.o==='1');t2Go();}));
+
+/* ---------- SIMULASI 3: RUANG PARTIKEL ---------- */
+const W3=640,H3=340,RAD=8,RADP=10,EA3=4225,COSL=Math.cos(70*Math.PI/180);
+const LEVELS=['sangat rendah','rendah','sedang','tinggi','sangat tinggi'];
+const roomCv=$('room'),chartCv=$('roomChart');
+const S3={parts:[],run:false,t:0,coll:0,eff:0,effT:[],hist:[],flashes:[],last:0,n0:25,acc:0};
+function gauss(){let u=0;while(!u)u=Math.random();return Math.sqrt(-2*Math.log(u));}
+function initRoom(){
+  const n=+$('roomN').value,s=35+(+$('roomEn').value-1)*22;
+  S3.parts=[];S3.t=0;S3.coll=0;S3.eff=0;S3.effT=[];S3.hist=[{t:0,a:n}];S3.flashes=[];S3.n0=n;S3.acc=0;
+  for(let k=0;k<2*n;k++){
+    let x,y,ok,tries=0;
+    do{x=RAD+Math.random()*(W3-2*RAD);y=RAD+Math.random()*(H3-2*RAD);ok=S3.parts.every(p=>(p.x-x)**2+(p.y-y)**2>(2*RAD+2)**2);tries++;}while(!ok&&tries<200);
+    const sp=s*gauss(),ang=Math.random()*Math.PI*2;
+    S3.parts.push({x,y,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp,type:k<n?'A':'B',r:RAD,m:1,th:Math.random()*Math.PI*2,om:(Math.random()-0.5)*4,dead:false});
+  }
+  updRoomRo();
+}
+function facing(p,nx,ny){const a=Math.atan2(ny,nx);return Math.cos(p.th-a)>COSL;}
+function step3(dt){
+  const P=S3.parts;
+  for(const p of P){p.x+=p.vx*dt;p.y+=p.vy*dt;p.th+=p.om*dt;
+    if(p.x<p.r){p.x=p.r;p.vx=Math.abs(p.vx);}if(p.x>W3-p.r){p.x=W3-p.r;p.vx=-Math.abs(p.vx);}
+    if(p.y<p.r){p.y=p.r;p.vy=Math.abs(p.vy);}if(p.y>H3-p.r){p.y=H3-p.r;p.vy=-Math.abs(p.vy);}}
+  const born=[];
+  for(let i=0;i<P.length;i++){const a=P[i];if(a.dead)continue;
+    for(let j=i+1;j<P.length;j++){const b=P[j];if(b.dead)continue;
+      const dx=b.x-a.x,dy=b.y-a.y,rr=a.r+b.r,d2=dx*dx+dy*dy;if(d2>=rr*rr||d2===0)continue;
+      const d=Math.sqrt(d2),nx=dx/d,ny=dy/d;
+      const vn=(a.vx-b.vx)*nx+(a.vy-b.vy)*ny;
+      if(vn>0){
+        const pair=(a.type==='A'&&b.type==='B')||(a.type==='B'&&b.type==='A');
+        if(pair){S3.coll++;
+          const E=0.25*vn*vn;const ok=E>=EA3&&facing(a,nx,ny)&&facing(b,-nx,-ny);
+          const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
+          if(ok){a.dead=b.dead=true;S3.eff++;S3.effT.push(S3.t);
+            const A=a.type==='A'?a:b;
+            born.push({x:mx,y:my,vx:(a.vx+b.vx)/2,vy:(a.vy+b.vy)/2,type:'P',r:RADP,m:2,th:Math.atan2(A.y-my,A.x-mx),om:(Math.random()-0.5)*2,dead:false});
+            S3.flashes.push({x:mx,y:my,age:0,eff:true});break;}
+          else if(S3.flashes.length<40)S3.flashes.push({x:mx,y:my,age:0,eff:false});
+        }
+        const J=2*vn/(1/a.m+1/b.m);
+        a.vx-=J/a.m*nx;a.vy-=J/a.m*ny;b.vx+=J/b.m*nx;b.vy+=J/b.m*ny;
+      }
+      const ov=(rr-d)/2;a.x-=nx*ov;a.y-=ny*ov;b.x+=nx*ov;b.y+=ny*ov;
+    }}
+  S3.parts=P.filter(p=>!p.dead).concat(born);
+  S3.flashes.forEach(f=>f.age+=dt);S3.flashes=S3.flashes.filter(f=>f.age<0.6);
+}
+function countA(){return S3.parts.filter(p=>p.type==='A').length;}
+function updRoomRo(){
+  const a=countA();$('rA').textContent=a;$('rC').textContent=S3.coll;$('rE').textContent=S3.eff;
+  const win=Math.min(5,Math.max(S3.t,0.0001));const recent=S3.effT.filter(t=>t>S3.t-5).length;
+  $('rR').textContent=S3.t>0?fx(recent/win,1):'0,0';
+}
+function drawRoom(){
+  const {ctx,w,h}=setup(roomCv);const s=w/W3;ctx.clearRect(0,0,w,h);
+  ctx.save();ctx.scale(s,s);
+  const cA=css('--br'),cB=css('--teal'),cS=css('--site'),cI=css('--ink');
+  for(const p of S3.parts){
+    if(p.type==='P'){
+      const ox=Math.cos(p.th)*5,oy=Math.sin(p.th)*5;
+      ctx.fillStyle=cA;ctx.beginPath();ctx.arc(p.x+ox,p.y+oy,7,0,7);ctx.fill();
+      ctx.fillStyle=cB;ctx.beginPath();ctx.arc(p.x-ox,p.y-oy,7,0,7);ctx.fill();
+    }else{
+      ctx.fillStyle=p.type==='A'?cA:cB;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill();
+      ctx.fillStyle=cS;ctx.strokeStyle=cI;ctx.lineWidth=1;ctx.beginPath();ctx.arc(p.x+Math.cos(p.th)*p.r*0.6,p.y+Math.sin(p.th)*p.r*0.6,2.6,0,7);ctx.fill();ctx.stroke();
+    }
+  }
+  if($('roomMarks').checked){
+    for(const f of S3.flashes){const k=f.age/0.6;ctx.globalAlpha=1-k;ctx.strokeStyle=f.eff?css('--good'):css('--muted');ctx.lineWidth=f.eff?3:1.5;ctx.beginPath();ctx.arc(f.x,f.y,(f.eff?14:10)+k*12,0,7);ctx.stroke();}
+    ctx.globalAlpha=1;
+  }
+  ctx.restore();
+}
+function drawChart(){
+  const {ctx,w,h}=setup(chartCv);ctx.clearRect(0,0,w,h);
+  const L=40,R=12,T=12,B=30,pw=w-L-R,ph=h-T-B;
+  const tmax=Math.max(30,Math.ceil(S3.t/10)*10),n0=S3.n0;
+  const X=t=>L+t/tmax*pw,Y=a=>T+ph-a/n0*ph;
+  ctx.strokeStyle=css('--grid');ctx.fillStyle=css('--muted');ctx.lineWidth=1;ctx.font='10px '+css('--f-mono');
+  const ys=[0,Math.round(n0/2),n0];ys.forEach(a=>{const y=Y(a);line(ctx,L,y,L+pw,y);ctx.textAlign='right';ctx.textBaseline='middle';ctx.fillText(String(a),L-5,y);});
+  const stepT=tmax<=40?10:tmax<=100?20:50;
+  for(let t=0;t<=tmax;t+=stepT){ctx.textAlign='center';ctx.textBaseline='top';ctx.fillText(String(t),X(t),T+ph+4);}
+  ctx.strokeStyle=css('--muted');line(ctx,L,T,L,T+ph);line(ctx,L,T+ph,L+pw,T+ph);
+  ctx.font='11px '+css('--f-body');ctx.textAlign='right';ctx.textBaseline='bottom';ctx.fillText('waktu (s)',L+pw,h-1);
+  ctx.textAlign='left';ctx.textBaseline='top';ctx.fillStyle=css('--ink');ctx.fillText('Jumlah partikel A tersisa',L+6,T+2);
+  ctx.strokeStyle=css('--br');ctx.lineWidth=2.2;ctx.beginPath();S3.hist.forEach((p,i)=>{i?ctx.lineTo(X(p.t),Y(p.a)):ctx.moveTo(X(p.t),Y(p.a));});ctx.lineTo(X(S3.t),Y(countA()));ctx.stroke();
+}
+function renderRoom(){drawRoom();drawChart();updRoomRo();}
+redraws.push(()=>{drawRoom();drawChart();});ro.observe(roomCv);ro.observe(chartCv);
+function roomLoop(ts){
+  if(!S3.run)return;
+  const dt=S3.last?Math.min(0.04,(ts-S3.last)/1000):0;S3.last=ts;
+  const sub=3;for(let i=0;i<sub;i++){step3(dt/sub);}
+  S3.t+=dt;S3.acc+=dt;
+  if(S3.acc>=0.25){S3.acc=0;S3.hist.push({t:S3.t,a:countA()});}
+  renderRoom();
+  requestAnimationFrame(roomLoop);
+}
+$('roomPlay').addEventListener('click',()=>{S3.run=!S3.run;$('roomPlay').textContent=S3.run?'❚❚ Jeda':'▶ Lanjutkan';if(S3.run){S3.last=0;requestAnimationFrame(roomLoop);}});
+$('roomReset').addEventListener('click',()=>{S3.run=false;$('roomPlay').textContent='▶ Mulai';initRoom();renderRoom();});
+$('roomN').addEventListener('input',e=>{$('roomNv').textContent=e.target.value;S3.run=false;$('roomPlay').textContent='▶ Mulai';initRoom();renderRoom();});
+$('roomEn').addEventListener('input',e=>{$('roomEnv').textContent=LEVELS[+e.target.value-1];S3.run=false;$('roomPlay').textContent='▶ Mulai';initRoom();renderRoom();});
+$('roomMarks').addEventListener('change',drawRoom);
+initRoom();
+
+/* ---------- KUIS ---------- */
+const GRAPH='<svg class="mini-graph" viewBox="0 0 260 140" role="img" aria-label="Kurva A naik dari nol lalu melandai, kurva B turun dari atas lalu melandai"><line x1="30" y1="10" x2="30" y2="115" stroke="currentColor" stroke-width="1.5"/><line x1="30" y1="115" x2="250" y2="115" stroke="currentColor" stroke-width="1.5"/><path d="M30 113 C 70 50, 120 30, 245 24" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M30 20 C 70 85, 130 105, 245 110" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="6 4"/><text x="200" y="18" font-size="12" fill="currentColor">Kurva A</text><text x="196" y="102" font-size="12" fill="currentColor">Kurva B</text><text x="140" y="134" font-size="11" fill="currentColor" text-anchor="middle">waktu →</text><text x="14" y="62" font-size="11" fill="currentColor" text-anchor="middle" transform="rotate(-90 14 62)">konsentrasi</text></svg>';
+const Q1=[
+ {q:'Laju reaksi menyatakan…',o:['jumlah zat yang tersisa saat reaksi selesai','energi total yang dilepaskan reaksi','perubahan konsentrasi pereaksi atau produk per satuan waktu','banyaknya tumbukan yang terjadi'],a:2,ex:'Laju reaksi mengukur seberapa cepat konsentrasi berubah, sehingga selalu melibatkan perubahan konsentrasi dibagi selang waktu (M s⁻¹).'},
+ {q:'Perhatikan grafik. Kurva A dan kurva B masing-masing menunjukkan…',g:true,o:['A pereaksi, B produk','keduanya pereaksi','keduanya produk','A produk, B pereaksi'],a:3,ex:'Kurva A naik dari nol, artinya zatnya terbentuk (produk). Kurva B turun, artinya zatnya terpakai (pereaksi).'}
+];
+const Q2=[
+ {q:'Dua partikel bertumbukan dengan orientasi tepat, tetapi energinya lebih kecil dari Eₐ. Yang terjadi adalah…',o:['partikel bereaksi karena orientasinya sudah tepat','partikel terpental tanpa bereaksi karena energinya kurang dari Eₐ','partikel bereaksi tetapi lebih lambat','tumbukan tidak terjadi sama sekali'],a:1,ex:'Tumbukan tetap terjadi, tetapi tidak efektif. Kedua syarat harus dipenuhi sekaligus, dan di sini syarat energi tidak terpenuhi.'},
+ {q:'Energi aktivasi adalah…',o:['energi minimum yang diperlukan agar tumbukan menghasilkan reaksi','selisih energi antara produk dan pereaksi','energi yang dimiliki produk','jumlah partikel yang bertumbukan'],a:0,ex:'Eₐ adalah tinggi "bukit" dari tingkat energi pereaksi sampai keadaan transisi. Selisih energi produk dan pereaksi adalah besaran lain (perubahan entalpi).'}
+];
+const QF=[
+ {q:'Pada reaksi R → P, laju terhadap R ditulis v<sub>R</sub> = − <span class="frac"><span>Δ[R]</span><span>Δt</span></span>. Tanda negatif dipakai karena…',o:['[R] bertambah selama reaksi','selang waktu reaksi bernilai negatif','laju pereaksi selalu lebih kecil dari laju produk','Δ[R] bernilai negatif, sehingga tanda minus membuat laju bernilai positif'],a:3,ex:'[R] berkurang sehingga [R]<sub>akhir</sub> − [R]<sub>awal</sub> bernilai negatif. Dikalikan −1, laju menjadi positif.'},
+ {q:'Pada reaksi bromin dengan asam format, [Br₂] mula-mula 0,0120 M dan setelah 50 s menjadi 0,0101 M. Laju rata-rata berkurangnya Br₂ adalah…',o:['3,8 × 10⁻⁵ M s⁻¹','2,0 × 10⁻⁴ M s⁻¹','2,4 × 10⁻⁴ M s⁻¹','1,9 × 10⁻³ M s⁻¹'],a:0,ex:'v = − <span class="frac"><span>(0,0101 − 0,0120) M</span><span>(50 − 0) s</span></span> = <span class="frac"><span>0,0019 M</span><span>50 s</span></span> = 3,8 × 10⁻⁵ M s⁻¹. Pilihan D lupa membagi dengan waktu, sedangkan B dan C hanya membagi satu nilai konsentrasi dengan waktu.'},
+ {q:'Br₂ + HCOOH → 2Br⁻ + 2H⁺ + CO₂. Jika Br₂ berkurang dengan laju 4 × 10⁻⁵ M s⁻¹, laju terbentuknya Br⁻ adalah…',o:['2 × 10⁻⁵ M s⁻¹','4 × 10⁻⁵ M s⁻¹','8 × 10⁻⁵ M s⁻¹','1,6 × 10⁻⁴ M s⁻¹'],a:2,ex:'Perbandingan koefisien Br₂ : Br⁻ = 1 : 2, maka laju Br⁻ = 2 × (4 × 10⁻⁵ M s⁻¹) = 8 × 10⁻⁵ M s⁻¹.'},
+ {q:'Kurva [Br₂] terhadap waktu makin landai menjelang akhir reaksi. Penyebabnya adalah…',o:['energi aktivasi makin besar seiring waktu','konsentrasi Br₂ makin kecil sehingga tumbukan efektif makin jarang','partikel kehilangan orientasinya','produk yang terbentuk menghentikan reaksi'],a:1,ex:'Makin sedikit partikel pereaksi, makin jarang terjadi tumbukan efektif, sehingga laju menurun. Eₐ tidak berubah selama reaksi.'},
+ {q:'Dua partikel bertumbukan dengan energi di atas Eₐ, tetapi sisi reaktifnya tidak saling berhadapan. Yang terjadi adalah…',o:['partikel bereaksi karena energinya cukup','partikel bereaksi tetapi lebih lambat','partikel bergabung tanpa membentuk produk','partikel terpental tanpa bereaksi'],a:3,ex:'Energi yang cukup saja tidak cukup. Orientasi yang salah membuat tumbukan tidak efektif, sehingga partikel hanya terpental.'},
+ {q:'Pernyataan yang benar tentang tumbukan efektif adalah…',o:['Tumbukan efektif memerlukan energi ≥ Eₐ dan orientasi yang tepat','Semua tumbukan antarpartikel pereaksi menghasilkan reaksi','Orientasi tidak penting asalkan energinya tinggi','Energi aktivasi tidak berkaitan dengan tumbukan'],a:0,ex:'Ini inti teori tumbukan: kedua syarat harus terpenuhi bersamaan.'},
+ {q:'Warna larutan bromin berubah dari cokelat kemerahan menjadi tidak berwarna. Perubahan ini menunjukkan bahwa…',o:['[Br₂] bertambah','HCOOH tidak ikut bereaksi','[Br₂] berkurang karena bereaksi','reaksi belum dimulai'],a:2,ex:'Hanya Br₂ yang berwarna. Warna memudar karena Br₂ terpakai, sehingga konsentrasinya berkurang. HCOOH juga ikut bereaksi meskipun tidak berwarna.'}
+];
+const LET='ABCD';
+function buildQuiz(el,qs,instant,start){
+  el.innerHTML='';
+  qs.forEach((Q,qi)=>{
+    const d=document.createElement('div');d.className='q';
+    d.innerHTML='<div class="q-text"><span class="n">'+(start+qi)+'.</span>'+Q.q+'</div>'+(Q.g?GRAPH:'');
+    const opts=document.createElement('div');opts.className='opts';
+    const ex=document.createElement('div');ex.className='ex';ex.hidden=true;
+    Q.o.forEach((t,oi)=>{const b=document.createElement('button');b.type='button';b.className='opt';b.innerHTML='<span class="L">'+LET[oi]+'</span><span>'+t+'</span>';
+      b.addEventListener('click',()=>{
+        if(instant){[...opts.children].forEach((c,ci)=>{c.disabled=true;if(ci===Q.a)c.classList.add('right');});if(oi!==Q.a)b.classList.add('wrong');
+          ex.hidden=false;ex.innerHTML='<b>'+(oi===Q.a?'Tepat. ':'Belum tepat. Jawaban: '+LET[Q.a]+'. ')+'</b>'+Q.ex;}
+        else{[...opts.children].forEach(c=>c.classList.remove('sel'));b.classList.add('sel');Q.sel=oi;}
+      });opts.appendChild(b);});
+    d.appendChild(opts);d.appendChild(ex);Q._opts=opts;Q._ex=ex;el.appendChild(d);
+  });
+}
+buildQuiz($('quick1'),Q1,true,1);
+buildQuiz($('quick2'),Q2,true,1);
+buildQuiz($('final'),QF,false,1);
+$('finalCheck').addEventListener('click',()=>{
+  if(QF.some(Q=>Q.sel===undefined)){$('finalScore').textContent='Masih ada '+QF.filter(Q=>Q.sel===undefined).length+' soal yang belum dijawab.';$('finalScore').style.fontSize='1rem';return;}
+  let s=0;QF.forEach(Q=>{const ch=[...Q._opts.children];ch.forEach((c,ci)=>{c.disabled=true;c.classList.remove('sel');if(ci===Q.a)c.classList.add('right');});
+    if(Q.sel===Q.a)s++;else ch[Q.sel].classList.add('wrong');
+    Q._ex.hidden=false;Q._ex.innerHTML='<b>'+(Q.sel===Q.a?'Tepat. ':'Jawaban: '+LET[Q.a]+'. ')+'</b>'+Q.ex;});
+  $('finalScore').style.fontSize='';$('finalScore').textContent='Skor: '+s+' / '+QF.length+' ('+Math.round(s/QF.length*100)+')';
+});
+$('finalReset').addEventListener('click',()=>{QF.forEach(Q=>delete Q.sel);buildQuiz($('final'),QF,false,1);$('finalScore').textContent='';});
+
+/* initial render */
+renderS1();renderT2();renderRoom();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(redrawAll);
+})();
+</script>
+</body>
+</html>
